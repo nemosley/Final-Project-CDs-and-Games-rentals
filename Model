@@ -1,0 +1,39 @@
+<?php
+/**
+ * Front controller for FinalProject.
+ * Routes requests RESTfully: controller/method/parameter
+ */
+
+require_once "application/config.php";
+require_once "application/database.class.php";
+require_once "application/controller.class.php";
+require_once "application/view.class.php";
+
+// include model, controller, and views
+require_once "models/game_model.class.php";
+require_once "controllers/game_controller.class.php";
+require_once "views/game/game_index.class.php";
+require_once "views/game/game_detail.class.php";
+
+// Get URL path: controller/method/param
+$url = isset($_GET['url']) ? rtrim($_GET['url'], '/') : '';
+$parts = explode('/', $url);
+
+$controller_name = $parts[0] ?? 'game';
+$method          = $parts[1] ?? 'index';
+$param           = $parts[2] ?? null;
+
+// Select controller
+switch ($controller_name) {
+    case 'game':
+    default:
+        $controller = new GameController();
+        break;
+}
+
+// Call controller method
+if ($param !== null) {
+    $controller->$method($param);
+} else {
+    $controller->$method();
+}
